@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -37,67 +36,56 @@ import java.util.Scanner;
  */
 public class Matrix {
     /**
-     * this is main method (start of application)
-     *
-     * @param args
+     * This is main method (start of application)
      */
     public static void main(String[] args) {
-//        ArrayList<String> strArr = inputMatrix();
-//        //displayMatrix(strArr);
-//        System.out.println("Max rectangle sub-matrix with value 1: "
-//                + matrixChallenge(strArr));
-
-
-        System.out.println(matrixChallenge(
-                new String[]{"1111", "0110", "1110", "1111", "0111"}));
+        System.out.println(matrixChallenge(inputMatrix()));
     }
 
-//    /**
-//     * this method display matrix in console
-//     *
-//     * @param strArr ArrayList of String input value
-//     */
-//    private static void displayMatrix(ArrayList<String> strArr) {
-//        System.out.println("Input matrix:");
-//        for (String str : strArr) {
-//            System.out.println("\t" + str);
-//        }
-//    }
-//
-//    /**
-//     * this method check input matrix parameter and values
-//     * If all values correct create matrix else throw exception
-//     *
-//     * @return ArrayList<String> with input values
-//     * @throws InputMismatchException incorrect input parameters
-//     */
-//    private static ArrayList<String> inputMatrix() {
-//        Scanner sc = new Scanner(System.in);
-//        ArrayList<String> result = new ArrayList<>();
-//        System.out.print("Please, input size of matrix: ");
-//        try {
-//            int size = sc.nextInt();
-//            if (size <= 0) throw new InputMismatchException();
-//            System.out.println("Please, input matrix values: ");
-//            for (int i = 0; i < size; i++) {
-//                String inputValue = sc.next();
-//                if (inputValue.replaceAll("[^0-1]", "").length() != size) {
-//                    throw new InputMismatchException();
-//                }
-//                result.add(inputValue);
-//            }
-//        } catch (InputMismatchException e) {
-//            System.err.println("Please, input correct value!");
-//        }
-//        sc.close();
-//        return result;
-//    }
+    /**
+     * This method read input values and check this information. If we input incorrect
+     * values throw InputMismatchException exception and return null, else return values
+     *
+     * @return input values to create matrix
+     * @throws InputMismatchException incorrect input values
+     */
+    private static String[] inputMatrix() {
+        Scanner sc = new Scanner(System.in);
+        String[] inputValues;
+        System.out.print("Please, input count of elements: ");
+        try {
+            int size = sc.nextInt();
+            if (size <= 0) throw new InputMismatchException();
+            inputValues = new String[size];
+            System.out.println("Please, input matrix values: ");
+            for (int i = 0; i < size; i++) {
+                String inputVal = sc.next();
+                if (inputVal.replaceAll("[^0-1]", "").length() != size) {
+                    throw new InputMismatchException();
+                }
+                inputValues[i] = inputVal;
+            }
+        } catch (InputMismatchException e) {
+            System.err.println("Please, input correct value!");
+            inputValues = null;
+        }
+        sc.close();
+        return inputValues;
+    }
 
+    /**
+     * This method create int[][] matrix and call search max count
+     * of values 1 in this matrix
+     *
+     * @param strArr input String array
+     * @return max count of values 1 in input matrix
+     */
     static int matrixChallenge(String[] strArr) {
-        int size = strArr.length;
-        if (size == 1) return Integer.parseInt(strArr[0]) == 1 ? 1 : 0;
-        int[][] matrix = new int[size][strArr[0].length()];
-        for (int i = 0; i < size; i++) {
+        //if input string have only 1 number
+        if (strArr.length == 1) return Integer.parseInt(strArr[0]) == 1 ? 1 : 0;
+        //create int matrix from string
+        int[][] matrix = new int[strArr.length][strArr[0].length()];
+        for (int i = 0; i < strArr.length; i++) {
             String[] row = strArr[i].split("");
             for (int j = 0; j < matrix[0].length; j++)
                 matrix[i][j] = Integer.parseInt(row[j]);
@@ -105,8 +93,62 @@ public class Matrix {
         return findMaxRectangle(matrix);
     }
 
+    /**
+     * This method iterate to matrix index and find all rectangle submatrix
+     * with 1 in input matrix
+     *
+     * @param matrix input matrix
+     * @return max count of values 1 in input matrix
+     */
     private static int findMaxRectangle(int[][] matrix) {
         int result = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 1) {
+                    result = Math.max(result, searchSubMatrix(matrix, i, j));
+                }
+            }
+        }
         return result;
+    }
+
+    /**
+     * This method find zero in submatrix and cut column index by find position
+     *
+     * @param matrix input matrix
+     * @param i      start of row index
+     * @param j      start of col index
+     * @return count of values 1 in submatrix
+     */
+    private static int searchSubMatrix(int[][] matrix, int i, int j) {
+        int maxRow = findMaxNumber(matrix, i, j, true);
+        int maxCol = findMaxNumber(matrix, i, j, false);
+        for (int k = 0; k < maxRow; k++) {
+            for (int l = 0; l < maxCol; l++) {
+                if (matrix[i + k][j + l] == 0) maxCol = l;
+            }
+        }
+        return maxCol * maxRow;
+    }
+
+    /**
+     * This method find max count of 1 in row or col by input matrix from start position i and j
+     * I use boolean key with value true for iterate in row and value false - in column
+     *
+     * @param matrix input matrix
+     * @param i      start of row index
+     * @param j      start of col index
+     * @param key    input key(true for row; false for col)
+     * @return max number values of 1 in input line or column
+     */
+    private static int findMaxNumber(int[][] matrix, int i, int j, boolean key) {
+        int size = key ? matrix.length : matrix[0].length;
+        int start = key ? i : j;
+        int max = 0;
+        for (int k = start; k < size; k++) {
+            if ((key ? matrix[k][j] : matrix[i][k]) == 0) break;
+            max++;
+        }
+        return max;
     }
 }
