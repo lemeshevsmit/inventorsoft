@@ -1,5 +1,9 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 /**
- * This first task in inventorsoft academy .
+ * This first task in Inventorsoft academy .
  * <p>
  * General Description
  * Implement your task and push to the public git repository.
@@ -9,7 +13,7 @@
  * Task 1 (Maximal Rectangle, Matrix Challenge)
  * Have the function MatrixChallenge(strArr) take the strArr
  * parameter being passed which will be a 2D matrix of 0 and 1's,
- * and determine the area of the largest rectangular submatrix that
+ * and determine the area of the largest rectangular sub-matrix that
  * contains all 1's. For example: if strArr is ["10100", "10111", "11111", "10010"]
  * then this looks like the following matrix:
  * <p>
@@ -19,24 +23,117 @@
  * 1 0 0 1 0
  * <p>
  * For the input above, you can see the bolded 1's create the
- * largest rectangular submatrix of size 2x3, so your program
+ * largest rectangular sub-matrix of size 2x3, so your program
  * should return the area which is 6. You can assume the input will not be empty.
  * Examples
- * Input:
- * ["1011",
- * "0011",
- * "0111",
- * "1111"]
+ * Input: ["1011","0011","0111","1111"]
  * Output: 8
  * <p>
- * Input:
- * ["101",
- * "111",
- * "001"]
+ * Input: ["101","111","001"]
  * Output: 3
  *
  * @author Aleksandr Lemeshev
  * @since 05.09.2022
  */
 public class Matrix {
+    /**
+     * this is main method (start of application)
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+//        ArrayList<String> strArr = inputMatrix();
+//        //displayMatrix(strArr);
+//        System.out.println("Max rectangle sub-matrix with value 1: "
+//                + matrixChallenge(strArr));
+        System.out.println(findMaxRectangle(new int[][]{
+                {1, 1, 1, 1},
+                {0, 1, 1, 0},
+                {1, 1, 1, 0},
+                {1, 1, 1, 1}}));
+    }
+
+    /**
+     * this method display matrix in console
+     *
+     * @param strArr ArrayList of String input value
+     */
+    private static void displayMatrix(ArrayList<String> strArr) {
+        System.out.println("Input matrix:");
+        for (String str : strArr) {
+            System.out.println("\t" + str);
+        }
+    }
+
+    /**
+     * this method check input matrix parameter and values
+     * If all values correct create matrix else throw exception
+     *
+     * @return ArrayList<String> with input values
+     * @throws InputMismatchException incorrect input parameters
+     */
+    private static ArrayList<String> inputMatrix() {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<String> result = new ArrayList<>();
+        System.out.print("Please, input size of matrix: ");
+        try {
+            int size = sc.nextInt();
+            if (size <= 0) throw new InputMismatchException();
+            System.out.println("Please, input matrix values: ");
+            for (int i = 0; i < size; i++) {
+                String inputValue = sc.next();
+                if (inputValue.replaceAll("[^0-1]", "").length() != size) {
+                    throw new InputMismatchException();
+                }
+                result.add(inputValue);
+            }
+        } catch (InputMismatchException e) {
+            System.err.println("Please, input correct value!");
+        }
+        sc.close();
+        return result;
+    }
+
+    /**
+     * this method find max rectangle sub-matrix with value 1
+     * I create int matrix and call method for search result
+     *
+     * @param strArr input main matrix
+     * @return count of 1 in sub-matrix
+     */
+    static int matrixChallenge(ArrayList<String> strArr) {
+        int size = strArr.size();
+        if (size == 1) {
+            return Integer.parseInt(strArr.get(0)) == 1 ? 1 : 0;
+        }
+        int[][] matrix = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            String[] row = strArr.get(i).split("");
+            for (int j = 0; j < matrix.length; j++) {
+                matrix[i][j] = Integer.parseInt(row[j]);
+            }
+        }
+        return findMaxRectangle(matrix);
+    }
+
+    private static int findMaxRectangle(int[][] matrix) {
+        int result = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 1) {
+                    result = Math.max(result, bfs(matrix, i, j));
+                }
+            }
+        }
+        return result;
+    }
+
+    private static int bfs(int[][] matrix, int i, int j) {
+        for (int k = i; k < matrix.length; k++) {
+            for (int l = j; l < matrix[0].length; l++) {
+
+            }
+        }
+        return 0;
+    }
 }
