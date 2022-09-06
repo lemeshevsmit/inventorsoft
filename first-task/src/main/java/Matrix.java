@@ -39,7 +39,11 @@ public class Matrix {
      * This is main method (start of application)
      */
     public static void main(String[] args) {
-        System.out.println(matrixChallenge(inputMatrix()));
+        try {
+            System.out.println("Result: " + matrixChallenge(inputMatrix()));
+        } catch (InputMismatchException e) {
+            System.err.println("Please, input correct information!");
+        }
     }
 
     /**
@@ -49,25 +53,18 @@ public class Matrix {
      * @return input values to create matrix
      * @throws InputMismatchException incorrect input values
      */
-    private static String[] inputMatrix() {
+    private static String[] inputMatrix() throws InputMismatchException {
         Scanner sc = new Scanner(System.in);
-        String[] inputValues;
         System.out.print("Please, input count of elements: ");
-        try {
-            int size = sc.nextInt();
-            if (size <= 0) throw new InputMismatchException();
-            inputValues = new String[size];
-            System.out.println("Please, input matrix values: ");
-            for (int i = 0; i < size; i++) {
-                String inputVal = sc.next();
-                if (inputVal.replaceAll("[^0-1]", "").length() != size) {
-                    throw new InputMismatchException();
-                }
-                inputValues[i] = inputVal;
+        int size = sc.nextInt();
+        if (size <= 0) throw new InputMismatchException();
+        String[] inputValues = new String[size];
+        System.out.println("Please, input matrix values: ");
+        for (int i = 0; i < size; i++) {
+            inputValues[i] = sc.next();
+            if (inputValues[i].replaceAll("[^0-1]", "").length() != inputValues[i].length()) {
+                throw new InputMismatchException();
             }
-        } catch (InputMismatchException e) {
-            System.err.println("Please, input correct value!");
-            inputValues = null;
         }
         sc.close();
         return inputValues;
