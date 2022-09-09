@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @ToString
-public class PersonLoombook {
+public class PersonLombok {
     private int id;
     private String firstName;
     private String lastName;
@@ -17,22 +19,21 @@ public class PersonLoombook {
 
     public boolean equals(final Object o) {
         if (o == this) return true;
-        if (!(o instanceof PersonLoombook)) return false;
-        final PersonLoombook other = (PersonLoombook) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!(o instanceof PersonLombok)) return false;
+        final PersonLombok other = (PersonLombok) o;
+        if (!other.canEqual(this)) return false;
         if (this.getId() != other.getId()) return false;
         final Object this$firstName = this.getFirstName();
         final Object other$firstName = other.getFirstName();
-        if (this$firstName == null ? other$firstName != null : !this$firstName.equals(other$firstName)) return false;
+        if (!Objects.equals(this$firstName, other$firstName)) return false;
         final Object this$lastName = this.getLastName();
         final Object other$lastName = other.getLastName();
-        if (this$lastName == null ? other$lastName != null : !this$lastName.equals(other$lastName)) return false;
-        if (this.getAge() != other.getAge()) return false;
-        return true;
+        if (!Objects.equals(this$lastName, other$lastName)) return false;
+        return this.getAge() == other.getAge();
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof PersonLoombook;
+        return other instanceof PersonLombok;
     }
 
     public int hashCode() {
