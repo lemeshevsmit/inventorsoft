@@ -28,8 +28,10 @@ hs_err_pid*
 *.iws
 *.xml
 *.jsp
+*.pptx
 material/
- 
+
+
 # Maven
 log/
 target/
