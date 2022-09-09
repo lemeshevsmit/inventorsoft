@@ -28,7 +28,9 @@ hs_err_pid*
 *.iws
 *.xml
 *.jsp
+material/
  
 # Maven
 log/
 target/
+material/
