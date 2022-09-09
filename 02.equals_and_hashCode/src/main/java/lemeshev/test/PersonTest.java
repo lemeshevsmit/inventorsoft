@@ -93,7 +93,7 @@ class PersonTest {
         boolean resultXY = persons.get(index1).equals(persons.get(index2));
         boolean resultYX = persons.get(index2).equals(persons.get(index1));
         assertEquals("Object not equals", true, resultXY == resultYX);
-        System.out.println("symmetric is " + (resultYX ? "passed" : "failed") +
+        System.out.println("Symmetric is " + (resultYX ? "passed" : "failed") +
                 " >>> X^Y: " + resultXY + " Y^X: " + resultYX);
     }
 
@@ -106,7 +106,7 @@ class PersonTest {
         boolean resultZX = persons.get(index3).equals(persons.get(index1));
         boolean result = resultXY == resultYZ == resultZX;
         assertEquals("Object not equals", true, result);
-        System.out.println("symmetric is " + (result ? "passed" : "failed") +
+        System.out.println("Transitive is " + (result ? "passed" : "failed") +
                 " >>> X^Y: " + resultXY + " Y^Z: " + resultYZ + " Z^X: " + resultYZ);
     }
     @ParameterizedTest
@@ -118,7 +118,7 @@ class PersonTest {
         boolean third = persons.get(index1).equals(persons.get(index2));
         boolean result = first == second == third;
         assertEquals("Object not equals", true, result);
-        System.out.println("symmetric is " + (result ? "passed" : "failed") +
+        System.out.println("Consistent is " + (result ? "passed" : "failed") +
                 " >>> X^Y: " + first + " X^Y: " + second + " X^Y: " + second);
     }
 
@@ -128,12 +128,29 @@ class PersonTest {
         System.out.println("Testing equals with null for class: " + persons.get(index).getClass().getName());
         boolean result = persons.get(index).equals(null);
         assertFalse("Object not equals", result);
-        System.out.println("Reflexive is " + (!result ? "passed" : "failed") + " >>> " + result);
+        System.out.println("Equals with null is " + (!result ? "passed" : "failed") + " >>> " + result);
     }
 
     @Test
-    void nullPointException() {
+    public void nullPointException() {
         Exception exception = assertThrows(NullPointerException.class, () -> persons.get(9).equals(null));
         assertEquals("Cannot read field \"id\" because \"person\" is null", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"0, 1", "3, 4", "9,10"})
+    public void equalsHashCode(int index1, int index2) {
+        System.out.println("Testing hashCode for class: " + persons.get(index1).getClass().getName());
+        boolean result = persons.get(index1).hashCode()==persons.get(index2).hashCode();
+        assertEquals("Object not equals", true, result);
+        System.out.println("HashCode in pare is " + (result ? "equals" : "not equals") + " >>> " + result);
+    }
+
+    @Test
+    public void equalsHashCodeIncorrect() {
+        System.out.println("Testing hashCode for class: " + persons.get(6).getClass().getName());
+        boolean result = persons.get(6).hashCode()==persons.get(7).hashCode();
+        assertEquals("Object not equals", false, result);
+        System.out.println("HashCode in pare is " + (!result ? "equals" : "not equals") + " >>> " + result);
     }
 }
